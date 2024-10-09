@@ -1,6 +1,6 @@
 /*!
  * Vue.js v2.6.14
- * (c) 2014-2021 Evan You
+ * (c) 2014-2024 Evan You
  * Released under the MIT License.
  */
 (function (global, factory) {
@@ -5313,7 +5313,8 @@
     props: {
       include: patternTypes,
       exclude: patternTypes,
-      max: [String, Number]
+      max: [String, Number],
+      ableToPrune: Boolean,
     },
 
     methods: {
@@ -5334,7 +5335,7 @@
           };
           keys.push(keyToCache);
           // prune oldest entry
-          if (this.max && keys.length > parseInt(this.max)) {
+          if (this.max && keys.length > parseInt(this.max) && this.ableToPrune) {
             pruneCacheEntry(cache, keys[0], keys, this._vnode);
           }
           this.vnodeToCache = null;
@@ -5362,6 +5363,18 @@
       });
       this.$watch('exclude', function (val) {
         pruneCache(this$1, function (name) { return !matches(val, name); });
+      });
+
+      this.$watch('ableToPrune', function (val) {
+        var ref = this;
+        var max = ref.max;
+        var keys = ref.keys;
+        var cache = ref.cache;
+        if (val && max && keys.length > parseInt(max)) {
+          for (var i = 0; i <= keys.length - parseInt(max); i++) {
+            pruneCacheEntry(cache, keys[i], keys);
+          }
+        }
       });
     },
 

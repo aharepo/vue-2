@@ -63,7 +63,8 @@ export default {
   props: {
     include: patternTypes,
     exclude: patternTypes,
-    max: [String, Number]
+    max: [String, Number],
+    ableToPrune: Boolean,
   },
 
   methods: {
@@ -78,7 +79,7 @@ export default {
         }
         keys.push(keyToCache)
         // prune oldest entry
-        if (this.max && keys.length > parseInt(this.max)) {
+        if (this.max && keys.length > parseInt(this.max) && this.ableToPrune) {
           pruneCacheEntry(cache, keys[0], keys, this._vnode)
         }
         this.vnodeToCache = null
@@ -105,6 +106,15 @@ export default {
     this.$watch('exclude', val => {
       pruneCache(this, name => !matches(val, name))
     })
+
+    this.$watch('ableToPrune', function (val) {
+      const {max, keys, cache} = this;
+      if (val && max && keys.length > parseInt(max)) {
+        for (var i = 0; i <= keys.length - parseInt(max); i++) {
+          pruneCacheEntry(cache, keys[i], keys);
+        }
+      }
+    });
   },
 
   updated () {
