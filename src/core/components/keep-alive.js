@@ -64,7 +64,10 @@ export default {
     include: patternTypes,
     exclude: patternTypes,
     max: [String, Number],
-    ableToPrune: Boolean,
+    ableToPrune: {
+      type: Boolean,
+      default: true,
+    },
   },
 
   methods: {
