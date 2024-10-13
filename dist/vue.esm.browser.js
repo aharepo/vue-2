@@ -5396,8 +5396,9 @@ var KeepAlive = {
     this.$watch('ableToPrune', function (val) {
       const {max, keys, cache} = this;
       if (val && max && keys.length > parseInt(max)) {
-        for (var i = 0; i <= keys.length - parseInt(max); i++) {
-          pruneCacheEntry(cache, keys[i], keys);
+        const length = keys.length - parseInt(max);
+        for (var i = 0; i < length; i++) {
+          pruneCacheEntry(cache, keys[0], keys);
         }
       }
     });
